@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: May 27, 2024 at 01:23 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost
+-- Generation Time: May 30, 2024 at 11:34 AM
+-- Server version: 10.11.6-MariaDB-0+deb12u1
+-- PHP Version: 8.2.18
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -57,6 +57,18 @@ CREATE TABLE `products` (
 CREATE TABLE `product_category` (
   `product_category_id` int(11) NOT NULL,
   `name_category` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_info`
+--
+
+CREATE TABLE `product_info` (
+  `productinfo_id` int(11) NOT NULL,
+  `product_NumberOf` int(11) DEFAULT NULL,
+  `product_price` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -127,6 +139,12 @@ ALTER TABLE `products`
 --
 ALTER TABLE `product_category`
   ADD PRIMARY KEY (`product_category_id`);
+
+--
+-- Indexes for table `product_info`
+--
+ALTER TABLE `product_info`
+  ADD PRIMARY KEY (`productinfo_id`);
 
 --
 -- Indexes for table `user_cart`
