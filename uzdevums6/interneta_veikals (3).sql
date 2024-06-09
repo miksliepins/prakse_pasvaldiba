@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 30, 2024 at 11:34 AM
+-- Generation Time: Jun 10, 2024 at 07:28 AM
 -- Server version: 10.11.6-MariaDB-0+deb12u1
 -- PHP Version: 8.2.18
 
@@ -45,7 +45,7 @@ CREATE TABLE `products` (
   `products_bilde` varchar(255) DEFAULT NULL,
   `products_apraskts` text DEFAULT NULL,
   `products_count` int(11) DEFAULT NULL,
-  `product_category_product_category_id` int(11) DEFAULT NULL
+  `product_category_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -68,7 +68,9 @@ CREATE TABLE `product_category` (
 CREATE TABLE `product_info` (
   `productinfo_id` int(11) NOT NULL,
   `product_NumberOf` int(11) DEFAULT NULL,
-  `product_price` decimal(10,2) DEFAULT NULL
+  `product_price` decimal(10,2) DEFAULT NULL,
+  `cart_id` int(11) NOT NULL,
+  `products_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -79,9 +81,11 @@ CREATE TABLE `product_info` (
 
 CREATE TABLE `user_cart` (
   `cart_id` int(11) NOT NULL,
-  `user_cart_cart_id` int(11) DEFAULT NULL,
-  `order_state` varchar(100) DEFAULT NULL,
-  `order_id` int(11) DEFAULT NULL
+  `user_price` decimal(10,2) NOT NULL,
+  `user_order_number` varchar(255) NOT NULL,
+  `user_OrderTime` datetime NOT NULL,
+  `UserInfo_id` int(11) NOT NULL,
+  `orderState_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -95,10 +99,7 @@ CREATE TABLE `user_info` (
   `user_info_name` varchar(100) DEFAULT NULL,
   `user_info_surname` varchar(100) DEFAULT NULL,
   `user_info_email` varchar(100) DEFAULT NULL,
-  `user_info_adrese` varchar(100) DEFAULT NULL,
-  `user_orderTime` datetime DEFAULT NULL,
-  `user_summa` decimal(10,2) DEFAULT NULL,
-  `user_preces_nummurs` varchar(255) DEFAULT NULL
+  `user_info_adrese` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -132,7 +133,7 @@ ALTER TABLE `order_state`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`products_id`),
-  ADD KEY `product_category_product_category_id` (`product_category_product_category_id`);
+  ADD KEY `product_category_product_category_id` (`product_category_id`);
 
 --
 -- Indexes for table `product_category`
@@ -144,14 +145,17 @@ ALTER TABLE `product_category`
 -- Indexes for table `product_info`
 --
 ALTER TABLE `product_info`
-  ADD PRIMARY KEY (`productinfo_id`);
+  ADD PRIMARY KEY (`productinfo_id`),
+  ADD KEY `cart_id` (`cart_id`),
+  ADD KEY `products_id` (`products_id`);
 
 --
 -- Indexes for table `user_cart`
 --
 ALTER TABLE `user_cart`
   ADD PRIMARY KEY (`cart_id`),
-  ADD KEY `user_cart_cart_id` (`user_cart_cart_id`);
+  ADD KEY `UserInfo_id` (`UserInfo_id`),
+  ADD KEY `orderState_id` (`orderState_id`);
 
 --
 -- Indexes for table `user_info`
@@ -168,6 +172,52 @@ ALTER TABLE `user_login`
   ADD UNIQUE KEY `user_email_UNIQUE` (`user_email`);
 
 --
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `order_state`
+--
+ALTER TABLE `order_state`
+  MODIFY `order_state_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `products_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `product_category`
+--
+ALTER TABLE `product_category`
+  MODIFY `product_category_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `product_info`
+--
+ALTER TABLE `product_info`
+  MODIFY `productinfo_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user_cart`
+--
+ALTER TABLE `user_cart`
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user_info`
+--
+ALTER TABLE `user_info`
+  MODIFY `userinfo_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user_login`
+--
+ALTER TABLE `user_login`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -181,13 +231,21 @@ ALTER TABLE `order_state`
 -- Constraints for table `products`
 --
 ALTER TABLE `products`
-  ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`product_category_product_category_id`) REFERENCES `product_category` (`product_category_id`);
+  ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`product_category_id`) REFERENCES `product_category` (`product_category_id`);
+
+--
+-- Constraints for table `product_info`
+--
+ALTER TABLE `product_info`
+  ADD CONSTRAINT `product_info_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `user_cart` (`cart_id`),
+  ADD CONSTRAINT `product_info_ibfk_2` FOREIGN KEY (`products_id`) REFERENCES `products` (`products_id`);
 
 --
 -- Constraints for table `user_cart`
 --
 ALTER TABLE `user_cart`
-  ADD CONSTRAINT `user_cart_ibfk_1` FOREIGN KEY (`user_cart_cart_id`) REFERENCES `user_info` (`userinfo_id`);
+  ADD CONSTRAINT `user_cart_ibfk_1` FOREIGN KEY (`UserInfo_id`) REFERENCES `user_info` (`userinfo_id`),
+  ADD CONSTRAINT `user_cart_ibfk_2` FOREIGN KEY (`orderState_id`) REFERENCES `order_state` (`order_state_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
