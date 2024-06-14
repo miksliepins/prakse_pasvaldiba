@@ -12,7 +12,7 @@ class Database {
   }
 
   private function loadConfig() {
-    $config = parse_ini_file(__DIR__ . '../../../admin/config/config.php', true);
+    $config = parse_ini_file(__DIR__.'../../../config/config.ini', true);
     $this->host = $config['database']['db_Host'];
     $this->username = $config['database']['db_user'];
     $this->password = $config['database']['db_password'];
